@@ -9,7 +9,7 @@ import ohce
 import XCTest
 
 extension XCTestCase {
-    func expectExit(expectedCode: Int32, testcase: @escaping () -> Void) {
+    func expectExit(expectedCode: Int32, testcase: @escaping () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "expecting Exit")
         var errorCode: Int32? = nil
         
@@ -22,7 +22,7 @@ extension XCTestCase {
         DispatchQueue.global(qos: .userInitiated).async(execute: testcase)
         
         waitForExpectations(timeout: 0.5) { _ in
-            XCTAssertEqual(errorCode, expectedCode)
+            XCTAssertEqual(errorCode, expectedCode, file: file, line: line)
             
             ExitUtil.restoreExit()
         }
