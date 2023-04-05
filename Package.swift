@@ -7,7 +7,7 @@ let package = Package(
     name: "ohce-kata",
     dependencies: [],
     targets: [
-        .target(name: "ohce", dependencies: []),
+        .executableTarget(name: "ohce", dependencies: []),
         .testTarget(name: "ohceTests", dependencies: ["ohce"])
     ]
 )
