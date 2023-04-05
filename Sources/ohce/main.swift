@@ -1,4 +1,5 @@
 import Foundation
 
-let app = Ohce()
+let printer = Printer()
+let app = Ohce(printer: printer)
 app.run(nil)
