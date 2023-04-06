@@ -17,7 +17,9 @@ public final class Ohce {
     
     public func run(_ argument: String?) {
         
-        if argument == nil {
+        if let argument {
+            printer.log("> ¡Buenos días \(argument)!")
+        } else {
             printer.log("Error: no argument passed")
             exit(1)
         }

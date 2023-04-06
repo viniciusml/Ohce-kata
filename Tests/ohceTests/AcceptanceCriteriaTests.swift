@@ -21,6 +21,16 @@ final class AcceptanceCriteriaTests: XCTestCase {
         
         XCTAssertEqual(printer.log, [.print(errorMessage)])
     }
+    
+    func test_run_withOneArgument_greetsInTheMorning() {
+        let argument = "Vini"
+        let printer = PrinterSpy()
+        let sut = Ohce(printer: printer)
+        
+        sut.run(argument)
+        
+        XCTAssertEqual(printer.log, [.print("> ¡Buenos días \(argument)!")])
+    }
 }
 
 private extension AcceptanceCriteriaTests {
