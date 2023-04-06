@@ -32,20 +32,3 @@ public final class Ohce {
         }
     }
 }
-
-private extension Date {
-    
-    init?(hour: Int, minute: Int) {
-        let calendar = Calendar(identifier: .gregorian)
-        
-        var components = DateComponents()
-        components.hour = hour
-        components.minute = minute
-        
-        guard let date = calendar.date(from: components) else {
-            return nil
-        }
-        
-        self = date
-    }
-}
