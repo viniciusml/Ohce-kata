@@ -22,24 +22,45 @@ final class AcceptanceCriteriaTests: XCTestCase {
         XCTAssertEqual(printer.log, [.print(errorMessage)])
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsInTheMorning() {
+    func test_run_withOneArgument_doesNotExitAndGreetsBeforeNoon() throws {
         let argument = "Vini"
         let printer = PrinterSpy()
+        let date = try XCTUnwrap(Date(hour: 11, minute: 59))
         
         expectNotToExit {
-            let sut = Ohce(printer: printer)
+            let sut = Ohce(printer: printer, date: { date })
             sut.run(argument)
         }
         
         XCTAssertEqual(printer.log, [.print("> ¡Buenos días \(argument)!")])
+    }
+    
+    func test_run_withOneArgument_doesNotExitAndGreetsAfterNoon() throws {
+        let argument = "Vini"
+        let printer = PrinterSpy()
+        let date = try XCTUnwrap(Date(hour: 12, minute: 00))
+        
+        expectNotToExit {
+            let sut = Ohce(printer: printer, date: { date })
+            sut.run(argument)
+        }
+        
+        XCTAssertEqual(printer.log, [.print("> ¡Buenas tardes \(argument)!")])
     }
 }
 
 private extension AcceptanceCriteriaTests {
     
     final class PrinterSpy: Printable {
-        enum MethodCall: Equatable {
+        enum MethodCall: Equatable, CustomStringConvertible {
             case print(String)
+            
+            var description: String {
+                switch self {
+                case .print(let message):
+                    return ".print(\(message))"
+                }
+            }
         }
         
         private(set) var log = [MethodCall]()
@@ -47,5 +68,22 @@ private extension AcceptanceCriteriaTests {
         func log(_ message: String) {
             log.append(.print(message))
         }
+    }
+}
+
+private extension Date {
+    
+    init?(hour: Int, minute: Int) {
+        let calendar = Calendar(identifier: .gregorian)
+        
+        var components = DateComponents()
+        components.hour = hour
+        components.minute = minute
+        
+        guard let date = calendar.date(from: components) else {
+            return nil
+        }
+        
+        self = date
     }
 }
