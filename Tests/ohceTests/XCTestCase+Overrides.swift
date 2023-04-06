@@ -28,6 +28,22 @@ extension XCTestCase {
         }
     }
     
+    func expectNotToExit(testcase: @escaping () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "expecting not to Exit")
+        exp.isInverted = true
+        
+        ExitUtil.replaceExit { _ in
+            XCTFail("Expected app not to exit", file: file, line: line)
+            exp.fulfill()
+            self.unreachable()
+        }
+        DispatchQueue.global(qos: .userInitiated).async(execute: testcase)
+        
+        waitForExpectations(timeout: 0.5) { _ in
+            ExitUtil.restoreExit()
+        }
+    }
+    
     private func unreachable() -> Never {
         repeat {
             RunLoop.current.run()
