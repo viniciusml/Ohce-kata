@@ -10,6 +10,12 @@ import Foundation
 public final class Ohce {
     public typealias DateFactory = () -> Date
     
+    enum Greet {
+        case morning
+        case afternoon
+        case evening
+    }
+    
     private let printer: Printable
     private let date: DateFactory
     
@@ -23,15 +29,26 @@ public final class Ohce {
         
         if let argument {
             if date.isBetween(.h(06), and: .h(11, 59)) {
-                printer.log("> ¡Buenos días \(argument)!")
+                greet(.morning, argument: argument)
             } else if date.isBetween(.h(12), and: .h(20)) {
-                printer.log("> ¡Buenas tardes \(argument)!")
+                greet(.afternoon, argument: argument)
             } else {
-                printer.log("> ¡Buenas noches \(argument)!")
+                greet(.evening, argument: argument)
             }
         } else {
             printer.log("Error: no argument passed")
             exit(1)
+        }
+    }
+    
+    private func greet(_ greetType: Greet, argument: String) {
+        switch greetType {
+        case .morning:
+            printer.log("> ¡Buenos días \(argument)!")
+        case .afternoon:
+            printer.log("> ¡Buenas tardes \(argument)!")
+        case .evening:
+            printer.log("> ¡Buenas noches \(argument)!")
         }
     }
 }
