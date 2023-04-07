@@ -21,7 +21,16 @@ final class AcceptanceCriteriaTests: XCTestCase {
         XCTAssertEqual(printer.log, [.print(errorMessage)])
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsBeforeNoon() throws {
+    func test_run_withOneArgument_doesNotExitAndGreetsAfterSix() {
+        let argument = "Vini"
+        let (sut, printer) = makeSUT { .date(06) }
+        
+        runWithNoExit(argument: argument, on: sut, andAssert: {
+            XCTAssertEqual(printer.log, [.print("> ¡Buenos días \(argument)!")])
+        })
+    }
+    
+    func test_run_withOneArgument_doesNotExitAndGreetsBeforeNoon() {
         let argument = "Vini"
         let (sut, printer) = makeSUT { .date(11, 59) }
         
@@ -30,7 +39,7 @@ final class AcceptanceCriteriaTests: XCTestCase {
         })
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsAfterNoon() throws {
+    func test_run_withOneArgument_doesNotExitAndGreetsAfterNoon() {
         let argument = "Vini"
         let (sut, printer) = makeSUT { .date(12) }
         
@@ -39,9 +48,27 @@ final class AcceptanceCriteriaTests: XCTestCase {
         })
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsAfterEight() throws {
+    func test_run_withOneArgument_doesNotExitAndGreetsBeforeEight() {
         let argument = "Vini"
-        let (sut, printer) = makeSUT { .date(20) }
+        let (sut, printer) = makeSUT { .date(19, 59) }
+        
+        runWithNoExit(argument: argument, on: sut, andAssert: {
+            XCTAssertEqual(printer.log, [.print("> ¡Buenas tardes \(argument)!")])
+        })
+    }
+    
+    func test_run_withOneArgument_doesNotExitAndGreetsAfterEight() {
+        let argument = "Vini"
+        let (sut, printer) = makeSUT { .date(20, 05) }
+        
+        runWithNoExit(argument: argument, on: sut, andAssert: {
+            XCTAssertEqual(printer.log, [.print("> ¡Buenas noches \(argument)!")])
+        })
+    }
+    
+    func test_run_withOneArgument_doesNotExitAndGreetsBeforeSix() {
+        let argument = "Vini"
+        let (sut, printer) = makeSUT { .date(05, 55) }
         
         runWithNoExit(argument: argument, on: sut, andAssert: {
             XCTAssertEqual(printer.log, [.print("> ¡Buenas noches \(argument)!")])

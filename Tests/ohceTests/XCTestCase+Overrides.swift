@@ -21,7 +21,7 @@ extension XCTestCase {
         }
         DispatchQueue.global(qos: .userInitiated).async(execute: testcase)
         
-        waitForExpectations(timeout: 0.5) { _ in
+        waitForExpectations(timeout: 0.1) { _ in
             XCTAssertEqual(errorCode, expectedCode, file: file, line: line)
             
             ExitUtil.restoreExit()
@@ -39,7 +39,7 @@ extension XCTestCase {
         }
         DispatchQueue.global(qos: .userInitiated).async(execute: testcase)
         
-        waitForExpectations(timeout: 0.5) { _ in
+        waitForExpectations(timeout: 0.1) { _ in
             ExitUtil.restoreExit()
         }
     }

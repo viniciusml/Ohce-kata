@@ -22,12 +22,12 @@ public final class Ohce {
         let date = date()
         
         if let argument {
-            if date.isBetween(.h(12), and: .h(20)) {
-                printer.log("> ¡Buenas tardes \(argument)!")
-            } else if date >= Date(hour: 20, minute: 00)! {
-                printer.log("> ¡Buenas noches \(argument)!")
-            } else {
+            if date.isBetween(.h(06), and: .h(11, 59)) {
                 printer.log("> ¡Buenos días \(argument)!")
+            } else if date.isBetween(.h(12), and: .h(20)) {
+                printer.log("> ¡Buenas tardes \(argument)!")
+            } else {
+                printer.log("> ¡Buenas noches \(argument)!")
             }
         } else {
             printer.log("Error: no argument passed")
@@ -38,11 +38,11 @@ public final class Ohce {
 
 private extension Date {
     
-    func isBetween(_ value1: Date?, and value2: Date?) -> Bool {
-        guard let value1 = value1, let value2 = value2 else {
+    func isBetween(_ lhs: Date?, and rhs: Date?) -> Bool {
+        guard let lhs = lhs, let rhs = rhs else {
             return false
         }
-        return self >= value1 && self < value2
+        return (min(lhs, rhs)...max(lhs, rhs)).contains(self)
     }
     
     static func h(_ hour: Int, _ minute: Int = 00) -> Self? {
