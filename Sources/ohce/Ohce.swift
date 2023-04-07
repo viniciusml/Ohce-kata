@@ -27,17 +27,17 @@ public final class Ohce {
     public func run(_ argument: String?) {
         let date = date()
         
-        if let argument {
-            if date.isBetween(.h(06), and: .h(11, 59)) {
-                greet(.morning, argument: argument)
-            } else if date.isBetween(.h(12), and: .h(20)) {
-                greet(.afternoon, argument: argument)
-            } else {
-                greet(.evening, argument: argument)
-            }
-        } else {
+        guard let argument else {
             printer.log("Error: no argument passed")
             exit(1)
+        }
+        
+        if date.isBetween(.h(06), and: .h(11, 59)) {
+            greet(.morning, argument: argument)
+        } else if date.isBetween(.h(12), and: .h(20)) {
+            greet(.afternoon, argument: argument)
+        } else {
+            greet(.evening, argument: argument)
         }
     }
     
