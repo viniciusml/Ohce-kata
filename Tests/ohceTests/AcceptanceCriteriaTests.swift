@@ -38,6 +38,15 @@ final class AcceptanceCriteriaTests: XCTestCase {
             XCTAssertEqual(printer.log, [.print("> ¡Buenas tardes \(argument)!")])
         })
     }
+    
+    func test_run_withOneArgument_doesNotExitAndGreetsAfterEight() throws {
+        let argument = "Vini"
+        let (sut, printer) = makeSUT { .date(20) }
+        
+        runWithNoExit(argument: argument, on: sut, andAssert: {
+            XCTAssertEqual(printer.log, [.print("> ¡Buenas noches \(argument)!")])
+        })
+    }
 }
 
 private extension AcceptanceCriteriaTests {

@@ -21,8 +21,10 @@ public final class Ohce {
     public func run(_ argument: String?) {
         
         if let argument {
-            if date() >= Date(hour: 12, minute: 00)! {
+            if date() >= Date(hour: 12, minute: 00)! && date() < Date(hour: 20, minute: 00)! {
                 printer.log("> ¡Buenas tardes \(argument)!")
+            } else if date() >= Date(hour: 20, minute: 00)! {
+                printer.log("> ¡Buenas noches \(argument)!")
             } else {
                 printer.log("> ¡Buenos días \(argument)!")
             }
