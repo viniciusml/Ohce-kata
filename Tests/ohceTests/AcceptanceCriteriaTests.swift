@@ -23,8 +23,7 @@ final class AcceptanceCriteriaTests: XCTestCase {
     
     func test_run_withOneArgument_doesNotExitAndGreetsBeforeNoon() throws {
         let argument = "Vini"
-        let date = try XCTUnwrap(Date(hour: 11, minute: 59))
-        let (sut, printer) = makeSUT { date }
+        let (sut, printer) = makeSUT { .date(11, 59) }
         
         runWithNoExit(argument: argument, on: sut, andAssert: {
             XCTAssertEqual(printer.log, [.print("> ¡Buenos días \(argument)!")])
@@ -33,8 +32,7 @@ final class AcceptanceCriteriaTests: XCTestCase {
     
     func test_run_withOneArgument_doesNotExitAndGreetsAfterNoon() throws {
         let argument = "Vini"
-        let date = try XCTUnwrap(Date(hour: 12, minute: 00))
-        let (sut, printer) = makeSUT { date }
+        let (sut, printer) = makeSUT { .date(12) }
         
         runWithNoExit(argument: argument, on: sut, andAssert: {
             XCTAssertEqual(printer.log, [.print("> ¡Buenas tardes \(argument)!")])
@@ -76,5 +74,16 @@ private extension AcceptanceCriteriaTests {
         func log(_ message: String) {
             log.append(.print(message))
         }
+    }
+}
+
+private extension Date {
+    
+    static func date(_ hour: Int, _ minute: Int = 00, file: StaticString = #filePath, line: UInt = #line) -> Self {
+        guard let initialisedDate = Date(hour: hour, minute: minute) else {
+            XCTFail("Failed to initialise date", file: file, line: line)
+            return Date()
+        }
+        return initialisedDate
     }
 }
