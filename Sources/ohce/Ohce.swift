@@ -17,10 +17,12 @@ public final class Ohce {
     }
     
     private let printer: Printable
+    private let exiter: Exitable
     private let date: DateFactory
     
-    public init(printer: Printable, date: @escaping DateFactory = { Date() }) {
+    public init(printer: Printable, exiter: Exitable, date: @escaping DateFactory = { Date() }) {
         self.printer = printer
+        self.exiter = exiter
         self.date = date
     }
     
@@ -29,7 +31,7 @@ public final class Ohce {
         
         guard let argument else {
             printer.log("Error: no argument passed")
-            exit(1)
+            return exiter.exit(1)
         }
         
         if date.isBetween(.h(06), and: .h(11, 59)) {

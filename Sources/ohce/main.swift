@@ -1,5 +1,6 @@
 import Foundation
 
 let printer = Printer()
-let app = Ohce(printer: printer)
+let exiter = Exiter()
+let app = Ohce(printer: printer, exiter: exiter)
 app.run(nil)

@@ -12,67 +12,72 @@ final class AcceptanceCriteriaTests: XCTestCase {
     
     func test_run_withNoArguments_exitsAppWithErrorAndMessage() {
         let errorMessage = "Error: no argument passed"
-        let (sut, printer) = makeSUT()
+        let (sut, printer, exiter) = makeSUT()
         
-        expectExit(expectedCode: 1) {
-            sut.run(nil)
-        }
+        sut.run(nil)
         
         XCTAssertEqual(printer.log, [.print(errorMessage)])
+        XCTAssertEqual(exiter.log, [.exit(1)])
     }
     
     func test_run_withOneArgument_doesNotExitAndGreetsAfterSix() {
         let argument = "Vini"
-        let (sut, printer) = makeSUT { .date(06) }
+        let (sut, printer, exiter) = makeSUT { .date(06) }
         
-        runWithNoExit(argument: argument, on: sut, andAssert: {
-            XCTAssertEqual(printer.log, [.print("> ¡Buenos días \(argument)!")])
-        })
+        sut.run(argument)
+        
+        XCTAssertEqual(printer.log, [.print("> ¡Buenos días \(argument)!")])
+        XCTAssertEqual(exiter.log, [])
     }
     
     func test_run_withOneArgument_doesNotExitAndGreetsBeforeNoon() {
         let argument = "Vini"
-        let (sut, printer) = makeSUT { .date(11, 59) }
+        let (sut, printer, exiter) = makeSUT { .date(11, 59) }
         
-        runWithNoExit(argument: argument, on: sut, andAssert: {
-            XCTAssertEqual(printer.log, [.print("> ¡Buenos días \(argument)!")])
-        })
+        sut.run(argument)
+        
+        XCTAssertEqual(printer.log, [.print("> ¡Buenos días \(argument)!")])
+        XCTAssertEqual(exiter.log, [])
     }
     
     func test_run_withOneArgument_doesNotExitAndGreetsAfterNoon() {
         let argument = "Vini"
-        let (sut, printer) = makeSUT { .date(12) }
+        let (sut, printer, exiter) = makeSUT { .date(12) }
         
-        runWithNoExit(argument: argument, on: sut, andAssert: {
-            XCTAssertEqual(printer.log, [.print("> ¡Buenas tardes \(argument)!")])
-        })
+        sut.run(argument)
+        
+        XCTAssertEqual(printer.log, [.print("> ¡Buenas tardes \(argument)!")])
+        XCTAssertEqual(exiter.log, [])
     }
     
     func test_run_withOneArgument_doesNotExitAndGreetsBeforeEight() {
         let argument = "Vini"
-        let (sut, printer) = makeSUT { .date(19, 59) }
+        let (sut, printer, exiter) = makeSUT { .date(19, 59) }
         
-        runWithNoExit(argument: argument, on: sut, andAssert: {
-            XCTAssertEqual(printer.log, [.print("> ¡Buenas tardes \(argument)!")])
-        })
+        sut.run(argument)
+        
+        XCTAssertEqual(printer.log, [.print("> ¡Buenas tardes \(argument)!")])
+        XCTAssertEqual(exiter.log, [])
     }
     
     func test_run_withOneArgument_doesNotExitAndGreetsAfterEight() {
         let argument = "Vini"
-        let (sut, printer) = makeSUT { .date(20, 05) }
+        let (sut, printer, exiter) = makeSUT { .date(20, 05) }
         
-        runWithNoExit(argument: argument, on: sut, andAssert: {
-            XCTAssertEqual(printer.log, [.print("> ¡Buenas noches \(argument)!")])
-        })
+        sut.run(argument)
+        
+        XCTAssertEqual(printer.log, [.print("> ¡Buenas noches \(argument)!")])
+        XCTAssertEqual(exiter.log, [])
     }
     
     func test_run_withOneArgument_doesNotExitAndGreetsBeforeSix() {
         let argument = "Vini"
-        let (sut, printer) = makeSUT { .date(05, 55) }
+        let (sut, printer, exiter) = makeSUT { .date(05, 55) }
         
-        runWithNoExit(argument: argument, on: sut, andAssert: {
-            XCTAssertEqual(printer.log, [.print("> ¡Buenas noches \(argument)!")])
-        })
+        sut.run(argument)
+        
+        XCTAssertEqual(printer.log, [.print("> ¡Buenas noches \(argument)!")])
+        XCTAssertEqual(exiter.log, [])
     }
 }
 
@@ -80,17 +85,11 @@ private extension AcceptanceCriteriaTests {
     
     private func makeSUT(
         date: @escaping Ohce.DateFactory = { Date() }
-    ) -> (sut: Ohce, printer: PrinterSpy) {
+    ) -> (sut: Ohce, printer: PrinterSpy, exiter: ExiterSpy) {
         let printer = PrinterSpy()
-        let sut = Ohce(printer: printer, date: date)
-        return (sut, printer)
-    }
-    
-    private func runWithNoExit(argument: String, on sut: Ohce, andAssert assertion: () -> Void) {
-        expectNotToExit {
-            sut.run(argument)
-        }
-        assertion()
+        let exiter = ExiterSpy()
+        let sut = Ohce(printer: printer, exiter: exiter, date: date)
+        return (sut, printer, exiter)
     }
     
     final class PrinterSpy: Printable {
@@ -109,6 +108,25 @@ private extension AcceptanceCriteriaTests {
         
         func log(_ message: String) {
             log.append(.print(message))
+        }
+    }
+    
+    final class ExiterSpy: Exitable {
+        enum MethodCall: Equatable, CustomStringConvertible {
+            case exit(Int32)
+            
+            var description: String {
+                switch self {
+                case .exit(let code):
+                    return ".exit(\(code))"
+                }
+            }
+        }
+        
+        private(set) var log = [MethodCall]()
+        
+        func exit(_ code: Int32) {
+            log.append(.exit(code))
         }
     }
 }
