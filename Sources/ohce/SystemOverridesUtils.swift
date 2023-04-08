@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ExitUtil {
+public enum ExitUtil {
     
     static var exitClosure: (Int32) -> Never = defaultExitClosure
     
