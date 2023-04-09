@@ -12,3 +12,5 @@ let argumentProcessor = ArgumentProcessor(
         app.run(argument)
     }
 )
+
+argumentProcessor.process()
