@@ -8,15 +8,13 @@
 import Foundation
 
 public final class ArgumentProcessor {
-    public typealias Action = () -> Void
-    
     private let argumentProvider: ArgumentProviding
-    private let onInvalidArgument: Action
-    private let onValidArgument: Action
+    private let onInvalidArgument: () -> Void
+    private let onValidArgument: (String) -> Void
     
     public init(argumentProvider: ArgumentProviding = ProcessInfo.processInfo,
-                onInvalidArgument: @escaping Action,
-                onValidArgument: @escaping Action) {
+                onInvalidArgument: @escaping () -> Void,
+                onValidArgument: @escaping (String) -> Void) {
         self.argumentProvider = argumentProvider
         self.onInvalidArgument = onInvalidArgument
         self.onValidArgument = onValidArgument
@@ -25,10 +23,10 @@ public final class ArgumentProcessor {
     public func process() {
         let arguments = argumentProvider.arguments.dropFirst()
         
-        guard arguments.count == 1 else {
+        guard arguments.count == 1, let argument = arguments.first else {
             return onInvalidArgument()
         }
         
-        onValidArgument()
+        onValidArgument(argument)
     }
 }

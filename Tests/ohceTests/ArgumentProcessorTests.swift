@@ -12,18 +12,21 @@ final class ArgumentProcessorTests: XCTestCase {
     
     func test_process_discardsExecutableNameAndValidatesOneArgument() {
         var actionCount = 0
+        var validArgument = ""
         let sut = makeSUT(
             arguments: ["executableName", "firstParameter"],
             invalidAction: {
                 XCTFail("Expected validated argument")
             },
-            validAction: {
+            validAction: { argument in
                 actionCount += 1
+                validArgument = argument
             })
         
         sut.process()
         
         XCTAssertEqual(actionCount, 1)
+        XCTAssertEqual(validArgument, "firstParameter")
     }
     
     func test_process_discardsExecutableNameAndInvalidatesMoreThanOneArgument() {
@@ -33,8 +36,8 @@ final class ArgumentProcessorTests: XCTestCase {
             invalidAction: {
                 actionCount += 1
             },
-            validAction: {
-                XCTFail("Expected invalidated argument")
+            validAction: { argument in
+                XCTFail("Expected invalidated argument, got valid \(argument) instead")
             })
         
         sut.process()
@@ -49,8 +52,8 @@ final class ArgumentProcessorTests: XCTestCase {
             invalidAction: {
                 actionCount += 1
             },
-            validAction: {
-                XCTFail("Expected invalidated argument")
+            validAction: { argument in
+                XCTFail("Expected invalidated argument, got valid \(argument) instead")
             })
         
         sut.process()
@@ -65,8 +68,8 @@ final class ArgumentProcessorTests: XCTestCase {
             invalidAction: {
                 actionCount += 1
             },
-            validAction: {
-                XCTFail("Expected invalidated argument")
+            validAction: { argument in
+                XCTFail("Expected invalidated argument, got valid \(argument) instead")
             })
         
         sut.process()
@@ -79,7 +82,7 @@ private extension ArgumentProcessorTests {
     
     func makeSUT(arguments: [String],
                  invalidAction: @escaping () -> Void,
-                 validAction: @escaping () -> Void
+                 validAction: @escaping (String) -> Void
     ) -> ArgumentProcessor {
         let argumentProvider = ArgumentProviderStub(arguments: arguments)
         let sut = ArgumentProcessor(argumentProvider: argumentProvider, onInvalidArgument: invalidAction, onValidArgument: validAction)
