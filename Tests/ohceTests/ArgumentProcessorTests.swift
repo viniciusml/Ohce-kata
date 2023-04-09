@@ -11,27 +11,31 @@ import XCTest
 final class ArgumentProcessorTests: XCTestCase {
     
     func test_process_discardsExecutableNameAndValidatesOneArgument() {
-        let argumentProvider = ArgumentProviderStub(arguments: ["executableName", "firstParameter"])
         var actionCount = 0
-        let sut = ArgumentProcessor(argumentProvider: argumentProvider, onInvalidArgument: {
-            XCTFail("Expected valid argument, received invalid instead")
-        }, onValidArgument: {
-            actionCount += 1
-        })
+        let sut = makeSUT(
+            arguments: ["executableName", "firstParameter"],
+            invalidAction: {
+                XCTFail("Expected validated argument")
+            },
+            validAction: {
+                actionCount += 1
+            })
         
         sut.process()
         
         XCTAssertEqual(actionCount, 1)
     }
     
-    func test_process_discardsExecutableNameAndInalidatesMoreThanOneArgument() {
-        let argumentProvider = ArgumentProviderStub(arguments: ["executableName", "firstParameter", "secondParameter"])
+    func test_process_discardsExecutableNameAndInvalidatesMoreThanOneArgument() {
         var actionCount = 0
-        let sut = ArgumentProcessor(argumentProvider: argumentProvider, onInvalidArgument: {
-            actionCount += 1
-        }, onValidArgument: {
-            XCTFail("Expected invalid argument, received valid instead")
-        })
+        let sut = makeSUT(
+            arguments: ["executableName", "firstParameter", "secondParameter"],
+            invalidAction: {
+                actionCount += 1
+            },
+            validAction: {
+                XCTFail("Expected invalidated argument")
+            })
         
         sut.process()
         
@@ -40,6 +44,15 @@ final class ArgumentProcessorTests: XCTestCase {
 }
 
 private extension ArgumentProcessorTests {
+    
+    func makeSUT(arguments: [String],
+                 invalidAction: @escaping () -> Void,
+                 validAction: @escaping () -> Void
+    ) -> ArgumentProcessor {
+        let argumentProvider = ArgumentProviderStub(arguments: arguments)
+        let sut = ArgumentProcessor(argumentProvider: argumentProvider, onInvalidArgument: invalidAction, onValidArgument: validAction)
+        return sut
+    }
     
     final class ArgumentProviderStub: ArgumentProviding {
         let arguments: [String]
