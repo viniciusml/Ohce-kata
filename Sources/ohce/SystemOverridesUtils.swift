@@ -21,3 +21,18 @@ public enum ExitUtil {
         exitClosure = defaultExitClosure
     }
 }
+
+public enum PrintUtil {
+    
+    static var printClosure: (String) -> Void = defaultPrintClosure
+    
+    private static let defaultPrintClosure = { Swift.print($0) }
+    
+    public static func replacePrint(closure: @escaping (String) -> Void) {
+        printClosure = closure
+    }
+    
+    public static func restorePrint() {
+        printClosure = defaultPrintClosure
+    }
+}

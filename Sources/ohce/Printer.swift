@@ -13,7 +13,9 @@ public protocol Printable {
 
 public final class Printer: Printable {
     
+    public init() {}
+    
     public func log(_ message: String) {
-        Swift.print(message)
+        PrintUtil.printClosure(message)
     }
 }

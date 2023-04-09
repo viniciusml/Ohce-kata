@@ -28,6 +28,25 @@ extension XCTestCase {
         }
     }
     
+    func expectPrint(expectedMessage: String, testcase: @escaping () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "expecting Print")
+        var receivedMessage: String? = nil
+        
+        PrintUtil.replacePrint { message in
+            receivedMessage = message
+            exp.fulfill()
+            self.unreachable()
+            
+        }
+        DispatchQueue.global(qos: .userInitiated).async(execute: testcase)
+        
+        waitForExpectations(timeout: 0.1) { _ in
+            XCTAssertEqual(receivedMessage, expectedMessage, file: file, line: line)
+            
+            PrintUtil.restorePrint()
+        }
+    }
+    
     private func unreachable() -> Never {
         repeat {
             RunLoop.current.run()
