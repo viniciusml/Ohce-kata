@@ -7,12 +7,6 @@
 
 import Foundation
 
-public protocol ArgumentProviding {
-    var arguments: [String] { get }
-}
-
-extension ProcessInfo: ArgumentProviding {}
-
 public final class ArgumentProcessor {
     public typealias Action = () -> Void
     
