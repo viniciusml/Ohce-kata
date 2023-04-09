@@ -27,15 +27,15 @@ public final class Ohce {
     
     @discardableResult
     public func run(_ argument: String) -> Self {
-        let date = date()
         
-        if date.isBetween(.h(06), and: .h(11, 59)) {
-            greet(.morning, argument: argument)
-        } else if date.isBetween(.h(12), and: .h(20)) {
-            greet(.afternoon, argument: argument)
-        } else {
-            greet(.evening, argument: argument)
+        let hour = Calendar.current.component(.hour, from: date())
+        
+        switch hour {
+        case 6..<12: greet(.morning, argument: argument)
+        case 12..<20: greet(.afternoon, argument: argument)
+        default: greet(.evening, argument: argument)
         }
+        
         return self
     }
     
