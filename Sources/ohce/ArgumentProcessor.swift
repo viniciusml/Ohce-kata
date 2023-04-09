@@ -29,7 +29,7 @@ public final class ArgumentProcessor {
     }
     
     public func process() {
-        let arguments = Array(argumentProvider.arguments.dropFirst())
+        let arguments = argumentProvider.arguments.dropFirst()
         
         guard arguments.count == 1 else {
             return onInvalidArgument()
