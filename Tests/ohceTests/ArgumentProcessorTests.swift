@@ -13,17 +13,16 @@ final class ArgumentProcessorTests: XCTestCase {
     func test_process_discardsExecutableNameAndValidatesOneArgument() {
         var actionCount = 0
         var validArgument = ""
-        let sut = makeSUT(
-            arguments: ["executableName", "firstParameter"],
-            invalidAction: {
-                XCTFail("Expected validated argument")
-            },
-            validAction: { argument in
+        let sut = makeSUT(arguments: ["executableName", "firstParameter"])
+        
+        sut.process()
+            .run(validArgument: { argument in
                 actionCount += 1
                 validArgument = argument
             })
-        
-        sut.process()
+            .handle(invalidArgument: {
+                XCTFail("Expected validated argument")
+            })
         
         XCTAssertEqual(actionCount, 1)
         XCTAssertEqual(validArgument, "firstParameter")
@@ -31,48 +30,45 @@ final class ArgumentProcessorTests: XCTestCase {
     
     func test_process_discardsExecutableNameAndInvalidatesMoreThanOneArgument() {
         var actionCount = 0
-        let sut = makeSUT(
-            arguments: ["executableName", "firstParameter", "secondParameter"],
-            invalidAction: {
-                actionCount += 1
-            },
-            validAction: { argument in
-                XCTFail("Expected invalidated argument, got valid \(argument) instead")
-            })
+        let sut = makeSUT(arguments: ["executableName", "firstParameter", "secondParameter"])
         
         sut.process()
+            .run(validArgument: { argument in
+                XCTFail("Expected invalidated argument, got valid \(argument) instead")
+            })
+            .handle(invalidArgument: {
+                actionCount += 1
+            })
         
         XCTAssertEqual(actionCount, 1)
     }
     
     func test_process_discardsExecutableNameAndInvalidatesNoArgument() {
         var actionCount = 0
-        let sut = makeSUT(
-            arguments: ["executableName"],
-            invalidAction: {
-                actionCount += 1
-            },
-            validAction: { argument in
-                XCTFail("Expected invalidated argument, got valid \(argument) instead")
-            })
+        let sut = makeSUT(arguments: ["executableName"])
         
         sut.process()
+            .run(validArgument: { argument in
+                XCTFail("Expected invalidated argument, got valid \(argument) instead")
+            })
+            .handle(invalidArgument: {
+                actionCount += 1
+            })
         
         XCTAssertEqual(actionCount, 1)
     }
     
     func test_process_invalidatesNoArgument() {
         var actionCount = 0
-        let sut = makeSUT(
-            arguments: [],
-            invalidAction: {
-                actionCount += 1
-            },
-            validAction: { argument in
-                XCTFail("Expected invalidated argument, got valid \(argument) instead")
-            })
+        let sut = makeSUT(arguments: [])
         
         sut.process()
+            .run(validArgument: { argument in
+                XCTFail("Expected invalidated argument, got valid \(argument) instead")
+            })
+            .handle(invalidArgument: {
+                actionCount += 1
+            })
         
         XCTAssertEqual(actionCount, 1)
     }
@@ -80,12 +76,9 @@ final class ArgumentProcessorTests: XCTestCase {
 
 private extension ArgumentProcessorTests {
     
-    func makeSUT(arguments: [String],
-                 invalidAction: @escaping () -> Void,
-                 validAction: @escaping (String) -> Void
-    ) -> ArgumentProcessor {
+    func makeSUT(arguments: [String]) -> ArgumentProcessing {
         let argumentProvider = ArgumentProviderStub(arguments: arguments)
-        let sut = ArgumentProcessor(argumentProvider: argumentProvider, onInvalidArgument: invalidAction, onValidArgument: validAction)
+        let sut = ArgumentProcessor(argumentProvider: argumentProvider)
         return sut
     }
     

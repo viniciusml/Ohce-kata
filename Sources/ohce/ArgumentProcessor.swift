@@ -7,26 +7,58 @@
 
 import Foundation
 
-public final class ArgumentProcessor {
-    private let argumentProvider: ArgumentProviding
-    private let onInvalidArgument: () -> Void
-    private let onValidArgument: (String) -> Void
+public protocol ArgumentProcessing {
+    @discardableResult
+    func process() -> ArgumentProcessing
     
-    public init(argumentProvider: ArgumentProviding = ProcessInfo.processInfo,
-                onInvalidArgument: @escaping () -> Void,
-                onValidArgument: @escaping (String) -> Void) {
-        self.argumentProvider = argumentProvider
-        self.onInvalidArgument = onInvalidArgument
-        self.onValidArgument = onValidArgument
+    @discardableResult
+    func run(validArgument: (String) -> Void) -> ArgumentProcessing
+    
+    @discardableResult
+    func handle(invalidArgument: () -> Void) -> ArgumentProcessing
+}
+
+public final class ArgumentProcessor: ArgumentProcessing {
+    enum Error: Swift.Error {
+        case notYetProcessed
+        case invalidArgument
     }
     
-    public func process() {
+    private let argumentProvider: ArgumentProviding
+    private var result: Result<String, Error> = .failure(.notYetProcessed)
+    
+    public init(argumentProvider: ArgumentProviding = ProcessInfo.processInfo) {
+        self.argumentProvider = argumentProvider
+    }
+    
+    @discardableResult
+    public func process() -> ArgumentProcessing {
         let arguments = argumentProvider.arguments.dropFirst()
         
         guard arguments.count == 1, let argument = arguments.first else {
-            return onInvalidArgument()
+            result = .failure(.invalidArgument)
+            return self
         }
         
-        onValidArgument(argument)
+        result = .success(argument)
+        return self
+    }
+    
+    @discardableResult
+    public func run(validArgument: (String) -> Void) -> ArgumentProcessing {
+        guard case let .success(argument) = result else {
+            return self
+        }
+        validArgument(argument)
+        return self
+    }
+    
+    @discardableResult
+    public func handle(invalidArgument: () -> Void) -> ArgumentProcessing {
+        guard case .failure = result else {
+            return self
+        }
+        invalidArgument()
+        return self
     }
 }
