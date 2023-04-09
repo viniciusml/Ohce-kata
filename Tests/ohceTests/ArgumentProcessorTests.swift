@@ -23,6 +23,20 @@ final class ArgumentProcessorTests: XCTestCase {
         
         XCTAssertEqual(actionCount, 1)
     }
+    
+    func test_process_discardsExecutableNameAndInalidatesMoreThanOneArgument() {
+        let argumentProvider = ArgumentProviderStub(arguments: ["executableName", "firstParameter", "secondParameter"])
+        var actionCount = 0
+        let sut = ArgumentProcessor(argumentProvider: argumentProvider, onInvalidArgument: {
+            actionCount += 1
+        }, onValidArgument: {
+            XCTFail("Expected invalid argument, received valid instead")
+        })
+        
+        sut.process()
+        
+        XCTAssertEqual(actionCount, 1)
+    }
 }
 
 private extension ArgumentProcessorTests {
