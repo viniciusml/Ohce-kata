@@ -10,16 +10,6 @@ import XCTest
 
 final class AcceptanceCriteriaTests: XCTestCase {
     
-    func test_run_withNoArguments_exitsAppWithErrorAndMessage() {
-        let errorMessage = "Error: no argument passed"
-        let (sut, printer, exiter) = makeSUT()
-        
-        sut.run(nil)
-        
-        XCTAssertEqual(printer.log, [.print(errorMessage)])
-        XCTAssertEqual(exiter.log, [.exit(1)])
-    }
-    
     func test_run_withOneArgument_doesNotExitAndGreetsAfterSix() {
         let argument = "Vini"
         let (sut, printer, exiter) = makeSUT { .date(06) }

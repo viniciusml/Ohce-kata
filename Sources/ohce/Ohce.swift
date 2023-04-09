@@ -26,13 +26,8 @@ public final class Ohce {
         self.date = date
     }
     
-    public func run(_ argument: String?) {
+    public func run(_ argument: String) {
         let date = date()
-        
-        guard let argument else {
-            printer.log("Error: no argument passed")
-            return exiter.exit(1)
-        }
         
         if date.isBetween(.h(06), and: .h(11, 59)) {
             greet(.morning, argument: argument)
