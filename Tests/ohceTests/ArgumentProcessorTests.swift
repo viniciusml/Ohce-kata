@@ -41,6 +41,38 @@ final class ArgumentProcessorTests: XCTestCase {
         
         XCTAssertEqual(actionCount, 1)
     }
+    
+    func test_process_discardsExecutableNameAndInvalidatesNoArgument() {
+        var actionCount = 0
+        let sut = makeSUT(
+            arguments: ["executableName"],
+            invalidAction: {
+                actionCount += 1
+            },
+            validAction: {
+                XCTFail("Expected invalidated argument")
+            })
+        
+        sut.process()
+        
+        XCTAssertEqual(actionCount, 1)
+    }
+    
+    func test_process_invalidatesNoArgument() {
+        var actionCount = 0
+        let sut = makeSUT(
+            arguments: [],
+            invalidAction: {
+                actionCount += 1
+            },
+            validAction: {
+                XCTFail("Expected invalidated argument")
+            })
+        
+        sut.process()
+        
+        XCTAssertEqual(actionCount, 1)
+    }
 }
 
 private extension ArgumentProcessorTests {
