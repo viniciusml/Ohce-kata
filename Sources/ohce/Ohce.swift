@@ -16,17 +16,17 @@ public final class Ohce {
         case evening
     }
     
-    private let printer: Printable
     private let exiter: Exitable
     private let date: DateFactory
+    private var greeting = ""
     
-    public init(printer: Printable, exiter: Exitable, date: @escaping DateFactory = { Date() }) {
-        self.printer = printer
+    public init(exiter: Exitable, date: @escaping DateFactory = { Date() }) {
         self.exiter = exiter
         self.date = date
     }
     
-    public func run(_ argument: String) {
+    @discardableResult
+    public func run(_ argument: String) -> Self {
         let date = date()
         
         if date.isBetween(.h(06), and: .h(11, 59)) {
@@ -36,16 +36,23 @@ public final class Ohce {
         } else {
             greet(.evening, argument: argument)
         }
+        return self
+    }
+    
+    @discardableResult
+    public func greet(_ action: (String) -> Void) -> Self {
+        action(greeting)
+        return self
     }
     
     private func greet(_ greetType: Greet, argument: String) {
         switch greetType {
         case .morning:
-            printer.log("> ¡Buenos días \(argument)!")
+            greeting = "> ¡Buenos días \(argument)!"
         case .afternoon:
-            printer.log("> ¡Buenas tardes \(argument)!")
+            greeting = "> ¡Buenas tardes \(argument)!"
         case .evening:
-            printer.log("> ¡Buenas noches \(argument)!")
+            greeting = "> ¡Buenas noches \(argument)!"
         }
     }
 }
