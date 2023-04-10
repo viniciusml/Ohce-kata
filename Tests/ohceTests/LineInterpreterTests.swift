@@ -13,13 +13,23 @@ final class LineInterpreterTests: XCTestCase {
     func test_nextLine_withRegularInput() {
         let sut = LineInterpreter()
         var receivedWords = [String]()
+        var receivedPalindromes = [String]()
+        var stopActionCount = 0
         
         sut.processLine("hola")
             .reversed {
                 receivedWords.append($0)
             }
+            .palindrome {
+                receivedPalindromes.append($0)
+            }
+            .stop {
+                stopActionCount += 1
+            }
         
         XCTAssertEqual(receivedWords, ["aloh"])
+        XCTAssertEqual(receivedPalindromes, [])
+        XCTAssertEqual(stopActionCount, 0)
     }
     
     func test_nextLine_withPalindromeInput() {
