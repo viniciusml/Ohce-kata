@@ -20,7 +20,7 @@ public final class LineProvider: LineProviding {
     }
 }
 
-public final class LineReader {
+public final class LineInterpreter {
     
     private let lineProvider: LineProviding
     private var nextCapturedLine: String? = .none

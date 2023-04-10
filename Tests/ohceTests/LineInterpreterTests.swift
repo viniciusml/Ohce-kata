@@ -8,11 +8,11 @@
 import ohce
 import XCTest
 
-final class LineReaderTests: XCTestCase {
+final class LineInterpreterTests: XCTestCase {
     
     func test_nextLine_withRegularInput() {
         let lineProvider = LineProviderStub(line: ["hola"])
-        let sut = LineReader(lineProvider: lineProvider)
+        let sut = LineInterpreter(lineProvider: lineProvider)
         var receivedWords = [String]()
         
         sut.processLine()
@@ -24,7 +24,7 @@ final class LineReaderTests: XCTestCase {
     }
 }
 
-private extension LineReaderTests {
+private extension LineInterpreterTests {
     
     final class LineProviderStub: LineProviding {
         
