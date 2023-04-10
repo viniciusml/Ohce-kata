@@ -37,6 +37,7 @@ public final class LineInterpreter {
         if let nextCapturedLine {
             word(nextCapturedLine.reversed().toString())
         }
+        nextCapturedLine = nil
         return self
     }
     
@@ -45,6 +46,7 @@ public final class LineInterpreter {
         if let nextCapturedLine, nextCapturedLine.reversed().toString() == nextCapturedLine {
             word(nextCapturedLine)
         }
+        nextCapturedLine = nil
         return self
     }
     
