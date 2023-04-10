@@ -16,12 +16,10 @@ public final class Ohce {
         case evening
     }
     
-    private let exiter: Exitable
     private let date: DateFactory
     private var greeting = ""
     
-    public init(exiter: Exitable, date: @escaping DateFactory = { Date() }) {
-        self.exiter = exiter
+    public init(date: @escaping DateFactory = { Date() }) {
         self.date = date
     }
     
