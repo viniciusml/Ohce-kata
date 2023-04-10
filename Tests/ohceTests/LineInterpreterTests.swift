@@ -21,4 +21,16 @@ final class LineInterpreterTests: XCTestCase {
         
         XCTAssertEqual(receivedWords, ["aloh"])
     }
+    
+    func test_nextLine_withPalindromeInput() {
+        let sut = LineInterpreter()
+        var receivedWords = [String]()
+        
+        sut.processLine("oto")
+            .palindrome {
+                receivedWords.append($0)
+            }
+        
+        XCTAssertEqual(receivedWords, ["oto"])
+    }
 }

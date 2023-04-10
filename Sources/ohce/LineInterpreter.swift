@@ -39,6 +39,14 @@ public final class LineInterpreter {
         }
         return self
     }
+    
+    @discardableResult
+    public func palindrome(_ word: (String) -> Void) -> Self {
+        if let nextCapturedLine, nextCapturedLine.reversed().toString() == nextCapturedLine {
+            word(nextCapturedLine)
+        }
+        return self
+    }
 }
 
 private extension Array where Element == Character {
