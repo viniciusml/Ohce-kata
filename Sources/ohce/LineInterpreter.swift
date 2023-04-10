@@ -35,29 +35,48 @@ public final class LineInterpreter {
     
     @discardableResult
     public func reversed(_ word: (String) -> Void) -> Self {
-        if let nextCapturedLine, nextCapturedLine.compared(stopKeyword, !=), nextCapturedLine.asReversedString.compared(nextCapturedLine, !=) {
-            resetCapturedLine()
-            word(nextCapturedLine.asReversedString)
+        guard let nextCapturedLine else {
+            return self
         }
+        executeFor(
+            nextCapturedLine.compared(stopKeyword, !=) && nextCapturedLine.asReversedString.compared(nextCapturedLine, !=),
+            action: {
+                word(nextCapturedLine.asReversedString)
+            })
         return self
     }
     
     @discardableResult
     public func palindrome(_ word: (String) -> Void) -> Self {
-        if let nextCapturedLine, nextCapturedLine.asReversedString.compared(nextCapturedLine, ==) {
-            resetCapturedLine()
-            word(nextCapturedLine)
+        guard let nextCapturedLine else {
+            return self
         }
+        executeFor(
+            nextCapturedLine.asReversedString.compared(nextCapturedLine, ==),
+            action: {
+                word(nextCapturedLine)
+            })
         return self
     }
     
     @discardableResult
     public func stop(_ action: () -> Void) -> Self {
-        if nextCapturedLine.compared(stopKeyword, ==) {
+        guard let nextCapturedLine else {
+            return self
+        }
+        executeFor(
+            nextCapturedLine.compared(stopKeyword, ==),
+            action: {
+                action()
+            })
+        return self
+    }
+    
+    private func executeFor(_ condition: Bool, action: () -> Void) {
+        if condition {
             resetCapturedLine()
             action()
         }
-        return self
     }
     
     private func resetCapturedLine() {
