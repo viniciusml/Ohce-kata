@@ -18,6 +18,7 @@ public final class Greeter {
     
     private let date: DateFactory
     private var greeting = ""
+    private var argument = ""
     
     public init(date: @escaping DateFactory = { Date() }) {
         self.date = date
@@ -25,13 +26,14 @@ public final class Greeter {
     
     @discardableResult
     public func run(_ argument: String) -> Self {
+        self.argument = argument
         
         let hour = Calendar.current.component(.hour, from: date())
         
         switch hour {
-        case 6..<12: greet(.morning, argument: argument)
-        case 12..<20: greet(.afternoon, argument: argument)
-        default: greet(.evening, argument: argument)
+        case 6..<12: greet(.morning)
+        case 12..<20: greet(.afternoon)
+        default: greet(.evening)
         }
         
         return self
@@ -44,12 +46,18 @@ public final class Greeter {
     }
     
     @discardableResult
+    public func sayGoodbye(_ action: (String) -> Void) -> Self {
+        action("> Adios \(argument)")
+        return self
+    }
+    
+    @discardableResult
     public func and(_ action: () -> Void) -> Self {
         action()
         return self
     }
     
-    private func greet(_ greetType: Greet, argument: String) {
+    private func greet(_ greetType: Greet) {
         switch greetType {
         case .morning:
             greeting = "> ¡Buenos días \(argument)!"

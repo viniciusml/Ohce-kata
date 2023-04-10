@@ -2,6 +2,7 @@ import Foundation
 
 let printer = Printer()
 let exiter = Exiter()
+let greeter = Greeter()
 let lineProvider = LineProvider(printer: printer)
 let lineInterpreter = LineInterpreter()
 
@@ -9,7 +10,7 @@ let argumentProcessor = ArgumentProcessor()
 argumentProcessor
     .process()
     .run(validArgument: { argument in
-        Greeter()
+        greeter
             .run(argument)
             .greet(printer.log)
             .and {
@@ -23,7 +24,7 @@ argumentProcessor
                             printer.log("> ¡Bonita palabra!")
                         }
                         .stop {
-                            printer.log("> Adios <NAME>")
+                            greeter.sayGoodbye(printer.log)
                             exiter.exit(0)
                         }
                 }
