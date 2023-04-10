@@ -43,6 +43,12 @@ public final class Greeter {
         return self
     }
     
+    @discardableResult
+    public func and(_ action: () -> Void) -> Self {
+        action()
+        return self
+    }
+    
     private func greet(_ greetType: Greet, argument: String) {
         switch greetType {
         case .morning:

@@ -13,9 +13,18 @@ public protocol LineProviding {
 
 public final class LineProvider: LineProviding {
     
-    public init() {}
+    private let printer: Printable
+    
+    public init(printer: Printable) {
+        self.printer = printer
+    }
     
     public func provide() -> String? {
-        ReadLineUtil.readLineClosure(false)
+        promptLine()
+    }
+    
+    private func promptLine() -> String? {
+        printer.log("$", terminator: " ")
+        return readLine()
     }
 }

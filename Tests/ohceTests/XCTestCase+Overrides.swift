@@ -32,7 +32,7 @@ extension XCTestCase {
         let exp = expectation(description: "expecting Print")
         var receivedMessage: String? = nil
         
-        PrintUtil.replacePrint { message in
+        PrintUtil.replacePrint { message, _ in
             receivedMessage = message
             exp.fulfill()
             self.unreachable()
@@ -44,21 +44,6 @@ extension XCTestCase {
             XCTAssertEqual(receivedMessage, expectedMessage, file: file, line: line)
             
             PrintUtil.restorePrint()
-        }
-    }
-    
-    func stubReadLine(_ stubbedLine: String, testcase: @escaping () -> Void, file: StaticString = #filePath, line: UInt = #line) {
-        let exp = expectation(description: "expecting Print")
-        
-        ReadLineUtil.replaceReadLine { _ in
-            exp.fulfill()
-            return stubbedLine
-        }
-        
-        DispatchQueue.global(qos: .userInitiated).async(execute: testcase)
-        
-        waitForExpectations(timeout: 0.1) { _ in
-            ReadLineUtil.restoreReadLine()
         }
     }
     

@@ -24,30 +24,15 @@ public enum ExitUtil {
 
 public enum PrintUtil {
     
-    static var printClosure: (String) -> Void = defaultPrintClosure
+    static var printClosure: (String, String) -> Void = defaultPrintClosure
     
-    private static let defaultPrintClosure = { Swift.print($0) }
+    private static let defaultPrintClosure = { Swift.print($0, terminator: $1) }
     
-    public static func replacePrint(closure: @escaping (String) -> Void) {
+    public static func replacePrint(closure: @escaping (String, String) -> Void) {
         printClosure = closure
     }
     
     public static func restorePrint() {
         printClosure = defaultPrintClosure
-    }
-}
-
-public enum ReadLineUtil {
-    
-    static var readLineClosure: (Bool) -> String? = defaultReadLineClosure
-    
-    private static let defaultReadLineClosure = { Swift.readLine(strippingNewline: $0) }
-    
-    public static func replaceReadLine(closure: @escaping (Bool) -> String?) {
-        readLineClosure = closure
-    }
-    
-    public static func restoreReadLine() {
-        readLineClosure = defaultReadLineClosure
     }
 }

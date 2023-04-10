@@ -8,14 +8,20 @@
 import Foundation
 
 public protocol Printable {
-    func log(_ message: String)
+    func log(_ message: String, terminator: String)
+}
+
+public extension Printable {
+    func log(_ message: String) {
+        log(message, terminator: "\n")
+    }
 }
 
 public final class Printer: Printable {
     
     public init() {}
     
-    public func log(_ message: String) {
-        PrintUtil.printClosure(message)
+    public func log(_ message: String, terminator: String) {
+        PrintUtil.printClosure(message, terminator)
     }
 }
