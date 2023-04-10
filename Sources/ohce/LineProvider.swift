@@ -8,14 +8,14 @@
 import Foundation
 
 public protocol LineProviding {
-    func readLine() -> String?
+    func provide() -> String?
 }
 
 public final class LineProvider: LineProviding {
     
     public init() {}
     
-    public func readLine() -> String? {
+    public func provide() -> String? {
         Swift.readLine()
     }
 }
