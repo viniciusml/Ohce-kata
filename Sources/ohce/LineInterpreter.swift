@@ -7,19 +7,6 @@
 
 import Foundation
 
-public protocol LineProviding {
-    func readLine() -> String?
-}
-
-public final class LineProvider: LineProviding {
-    
-    public init() {}
-    
-    public func readLine() -> String? {
-        Swift.readLine()
-    }
-}
-
 public final class LineInterpreter {
     
     private let stopKeyword = "Stop!"
