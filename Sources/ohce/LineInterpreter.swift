@@ -22,6 +22,7 @@ public final class LineProvider: LineProviding {
 
 public final class LineInterpreter {
     
+    private let stopKeyword = "Stop!"
     private var nextCapturedLine: String? = .none
     
     public init() {}
@@ -34,7 +35,7 @@ public final class LineInterpreter {
     
     @discardableResult
     public func reversed(_ word: (String) -> Void) -> Self {
-        if let nextCapturedLine, nextCapturedLine != "Stop!", nextCapturedLine.reversed().toString() != nextCapturedLine {
+        if let nextCapturedLine, nextCapturedLine != stopKeyword, nextCapturedLine.reversed().toString() != nextCapturedLine {
             self.nextCapturedLine = nil
             word(nextCapturedLine.reversed().toString())
         }
@@ -52,7 +53,7 @@ public final class LineInterpreter {
     
     @discardableResult
     public func stop(_ action: () -> Void) -> Self {
-        if let nextCapturedLine, nextCapturedLine == "Stop!" {
+        if let nextCapturedLine, nextCapturedLine == stopKeyword {
             self.nextCapturedLine = nil
             action()
         }
