@@ -11,7 +11,7 @@ import XCTest
 final class LineInterpreterTests: XCTestCase {
     
     func test_nextLine_withRegularInput() {
-        let sut = LineInterpreter()
+        let sut = makeSUT()
         var receivedWords = [String]()
         var receivedPalindromes = [String]()
         var stopActionCount = 0
@@ -33,7 +33,7 @@ final class LineInterpreterTests: XCTestCase {
     }
     
     func test_nextLine_withPalindromeInput() {
-        let sut = LineInterpreter()
+        let sut = makeSUT()
         var receivedWords = [String]()
         var receivedPalindromes = [String]()
         var stopActionCount = 0
@@ -55,7 +55,7 @@ final class LineInterpreterTests: XCTestCase {
     }
     
     func test_nextLine_withStoppingInput() {
-        let sut = LineInterpreter()
+        let sut = makeSUT()
         var receivedWords = [String]()
         var receivedPalindromes = [String]()
         var stopActionCount = 0
@@ -74,5 +74,12 @@ final class LineInterpreterTests: XCTestCase {
         XCTAssertEqual(receivedWords, [])
         XCTAssertEqual(receivedPalindromes, [])
         XCTAssertEqual(stopActionCount, 1)
+    }
+}
+
+private extension LineInterpreterTests {
+    
+    func makeSUT() -> LineInterpreter {
+        LineInterpreter()
     }
 }
