@@ -34,7 +34,7 @@ public final class LineInterpreter {
     
     @discardableResult
     public func reversed(_ word: (String) -> Void) -> Self {
-        if let nextCapturedLine, nextCapturedLine != "Stop!" {
+        if let nextCapturedLine, nextCapturedLine != "Stop!", nextCapturedLine.reversed().toString() != nextCapturedLine {
             self.nextCapturedLine = nil
             word(nextCapturedLine.reversed().toString())
         }

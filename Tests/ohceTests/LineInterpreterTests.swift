@@ -12,74 +12,64 @@ final class LineInterpreterTests: XCTestCase {
     
     func test_nextLine_withRegularInput() {
         let sut = makeSUT()
-        var receivedWords = [String]()
-        var receivedPalindromes = [String]()
-        var stopActionCount = 0
         
-        sut.processLine("hola")
-            .reversed {
-                receivedWords.append($0)
-            }
-            .palindrome {
-                receivedPalindromes.append($0)
-            }
-            .stop {
-                stopActionCount += 1
-            }
-        
-        XCTAssertEqual(receivedWords, ["aloh"])
-        XCTAssertEqual(receivedPalindromes, [])
-        XCTAssertEqual(stopActionCount, 0)
+        assertProcessedLine("hola", on: sut, is: .reversed("aloh"))
     }
     
     func test_nextLine_withPalindromeInput() {
         let sut = makeSUT()
-        var receivedWords = [String]()
-        var receivedPalindromes = [String]()
-        var stopActionCount = 0
         
-        sut.processLine("oto")
-            .reversed {
-                receivedWords.append($0)
-            }
-            .palindrome {
-                receivedPalindromes.append($0)
-            }
-            .stop {
-                stopActionCount += 1
-            }
-        
-        XCTAssertEqual(receivedWords, ["oto"])
-        XCTAssertEqual(receivedPalindromes, [])
-        XCTAssertEqual(stopActionCount, 0)
+        assertProcessedLine("oto", on: sut, is: .palindrome)
     }
     
     func test_nextLine_withStoppingInput() {
         let sut = makeSUT()
-        var receivedWords = [String]()
-        var receivedPalindromes = [String]()
-        var stopActionCount = 0
-        
-        sut.processLine("Stop!")
-            .reversed {
-                receivedWords.append($0)
-            }
-            .palindrome {
-                receivedPalindromes.append($0)
-            }
-            .stop {
-                stopActionCount += 1
-            }
-        
-        XCTAssertEqual(receivedWords, [])
-        XCTAssertEqual(receivedPalindromes, [])
-        XCTAssertEqual(stopActionCount, 1)
+
+        assertProcessedLine("Stop!", on: sut, is: .stop)
     }
 }
 
 private extension LineInterpreterTests {
     
+    enum LineType {
+        case reversed(String)
+        case palindrome
+        case stop
+    }
+    
     func makeSUT() -> LineInterpreter {
         LineInterpreter()
+    }
+    
+    func assertProcessedLine(_ lineInput: String, on sut: LineInterpreter, is lineType: LineType, file: StaticString = #filePath, line: UInt = #line) {
+        var receivedWords = [String]()
+        var receivedPalindromes = [String]()
+        var stopActionCount = 0
+        
+        sut.processLine(lineInput)
+            .reversed {
+                receivedWords.append($0)
+            }
+            .palindrome {
+                receivedPalindromes.append($0)
+            }
+            .stop {
+                stopActionCount += 1
+            }
+        
+        switch (lineType, receivedWords, receivedPalindromes, stopActionCount) {
+        case (.reversed(let reversedValue), let words, let palindromes, let stopCount):
+            XCTAssertEqual(words, [reversedValue], file: file, line: line)
+            XCTAssertEqual(palindromes, [], file: file, line: line)
+            XCTAssertEqual(stopCount, 0, file: file, line: line)
+        case (.palindrome, let words, let palindromes, let stopCount):
+            XCTAssertEqual(words, [], file: file, line: line)
+            XCTAssertEqual(palindromes, [lineInput], file: file, line: line)
+            XCTAssertEqual(stopCount, 0, file: file, line: line)
+        case (.stop, let words, let palindromes, let stopCount):
+            XCTAssertEqual(words, [], file: file, line: line)
+            XCTAssertEqual(palindromes, [], file: file, line: line)
+            XCTAssertEqual(stopCount, 1, file: file, line: line)
+        }
     }
 }
