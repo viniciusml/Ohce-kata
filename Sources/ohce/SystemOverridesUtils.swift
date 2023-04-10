@@ -36,3 +36,18 @@ public enum PrintUtil {
         printClosure = defaultPrintClosure
     }
 }
+
+public enum ReadLineUtil {
+    
+    static var readLineClosure: (Bool) -> String? = defaultReadLineClosure
+    
+    private static let defaultReadLineClosure = { Swift.readLine(strippingNewline: $0) }
+    
+    public static func replaceReadLine(closure: @escaping (Bool) -> String?) {
+        readLineClosure = closure
+    }
+    
+    public static func restoreReadLine() {
+        readLineClosure = defaultReadLineClosure
+    }
+}

@@ -47,6 +47,21 @@ extension XCTestCase {
         }
     }
     
+    func stubReadLine(_ stubbedLine: String, testcase: @escaping () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "expecting Print")
+        
+        ReadLineUtil.replaceReadLine { _ in
+            exp.fulfill()
+            return stubbedLine
+        }
+        
+        DispatchQueue.global(qos: .userInitiated).async(execute: testcase)
+        
+        waitForExpectations(timeout: 0.1) { _ in
+            ReadLineUtil.restoreReadLine()
+        }
+    }
+    
     private func unreachable() -> Never {
         repeat {
             RunLoop.current.run()

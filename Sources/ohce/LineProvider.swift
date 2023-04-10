@@ -16,6 +16,6 @@ public final class LineProvider: LineProviding {
     public init() {}
     
     public func provide() -> String? {
-        Swift.readLine()
+        ReadLineUtil.readLineClosure(false)
     }
 }

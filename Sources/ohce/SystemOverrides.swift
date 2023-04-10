@@ -14,3 +14,7 @@ public func exit(_ code: Int32) -> Never {
 public func print(_ message: String) {
     PrintUtil.printClosure(message)
 }
+
+public func readLine(strippingNewline: Bool = true) -> String? {
+    ReadLineUtil.readLineClosure(strippingNewline)
+}
