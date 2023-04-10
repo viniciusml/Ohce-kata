@@ -33,4 +33,16 @@ final class LineInterpreterTests: XCTestCase {
         
         XCTAssertEqual(receivedWords, ["oto"])
     }
+    
+    func test_nextLine_withStoppingInput() {
+        let sut = LineInterpreter()
+        var stopActionCount = 0
+        
+        sut.processLine("Stop!")
+            .stop {
+                stopActionCount += 1
+            }
+        
+        XCTAssertEqual(stopActionCount, 1)
+    }
 }

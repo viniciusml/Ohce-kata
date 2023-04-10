@@ -47,6 +47,14 @@ public final class LineInterpreter {
         }
         return self
     }
+    
+    @discardableResult
+    public func stop(_ action: () -> Void) -> Self {
+        if let nextCapturedLine, nextCapturedLine == "Stop!" {
+            action()
+        }
+        return self
+    }
 }
 
 private extension Array where Element == Character {
