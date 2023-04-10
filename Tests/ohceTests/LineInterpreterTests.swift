@@ -56,13 +56,23 @@ final class LineInterpreterTests: XCTestCase {
     
     func test_nextLine_withStoppingInput() {
         let sut = LineInterpreter()
+        var receivedWords = [String]()
+        var receivedPalindromes = [String]()
         var stopActionCount = 0
         
         sut.processLine("Stop!")
+            .reversed {
+                receivedWords.append($0)
+            }
+            .palindrome {
+                receivedPalindromes.append($0)
+            }
             .stop {
                 stopActionCount += 1
             }
         
+        XCTAssertEqual(receivedWords, [])
+        XCTAssertEqual(receivedPalindromes, [])
         XCTAssertEqual(stopActionCount, 1)
     }
 }

@@ -34,25 +34,26 @@ public final class LineInterpreter {
     
     @discardableResult
     public func reversed(_ word: (String) -> Void) -> Self {
-        if let nextCapturedLine {
+        if let nextCapturedLine, nextCapturedLine != "Stop!" {
+            self.nextCapturedLine = nil
             word(nextCapturedLine.reversed().toString())
         }
-        nextCapturedLine = nil
         return self
     }
     
     @discardableResult
     public func palindrome(_ word: (String) -> Void) -> Self {
         if let nextCapturedLine, nextCapturedLine.reversed().toString() == nextCapturedLine {
+            self.nextCapturedLine = nil
             word(nextCapturedLine)
         }
-        nextCapturedLine = nil
         return self
     }
     
     @discardableResult
     public func stop(_ action: () -> Void) -> Self {
         if let nextCapturedLine, nextCapturedLine == "Stop!" {
+            self.nextCapturedLine = nil
             action()
         }
         return self
