@@ -35,16 +35,16 @@ public final class LineInterpreter {
     
     @discardableResult
     public func reversed(_ word: (String) -> Void) -> Self {
-        if let nextCapturedLine, nextCapturedLine != stopKeyword, nextCapturedLine.reversed().toString() != nextCapturedLine {
+        if let nextCapturedLine, nextCapturedLine.compared(stopKeyword, !=), nextCapturedLine.asReversedString.compared(nextCapturedLine, !=) {
             resetCapturedLine()
-            word(nextCapturedLine.reversed().toString())
+            word(nextCapturedLine.asReversedString)
         }
         return self
     }
     
     @discardableResult
     public func palindrome(_ word: (String) -> Void) -> Self {
-        if let nextCapturedLine, nextCapturedLine.reversed().toString() == nextCapturedLine {
+        if let nextCapturedLine, nextCapturedLine.asReversedString.compared(nextCapturedLine, ==) {
             resetCapturedLine()
             word(nextCapturedLine)
         }
@@ -53,7 +53,7 @@ public final class LineInterpreter {
     
     @discardableResult
     public func stop(_ action: () -> Void) -> Self {
-        if let nextCapturedLine, nextCapturedLine == stopKeyword {
+        if nextCapturedLine.compared(stopKeyword, ==) {
             resetCapturedLine()
             action()
         }
@@ -69,5 +69,26 @@ private extension Array where Element == Character {
     
     func toString() -> String {
         self.map { String($0) }.joined()
+    }
+}
+
+private extension String {
+    
+    var asReversedString: String {
+        self.reversed().toString()
+    }
+    
+    func compared(_ value: String, _ action: (Self, Self) -> Bool) -> Bool {
+        action(value, self)
+    }
+}
+
+private extension Optional where Wrapped == String {
+    
+    func compared(_ value: String, _ action: (Self, Self) -> Bool) -> Bool {
+        guard let self else {
+            return false
+        }
+        return self.compared(value, action)
     }
 }
