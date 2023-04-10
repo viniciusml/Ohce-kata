@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class Ohce {
+public final class Greeter {
     public typealias DateFactory = () -> Date
     
     enum Greet {

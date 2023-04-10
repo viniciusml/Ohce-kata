@@ -1,5 +1,5 @@
 //
-//  AcceptanceCriteriaTests.swift
+//  GreeterTests.swift
 //  
 //
 //  Created by Vinicius Leal on 05/04/2023.
@@ -8,7 +8,7 @@
 import ohce
 import XCTest
 
-final class AcceptanceCriteriaTests: XCTestCase {
+final class GreeterTests: XCTestCase {
     
     func test_run_withOneArgument_doesNotExitAndGreetsAfterSix() {
         let argument = "Vini"
@@ -65,17 +65,17 @@ final class AcceptanceCriteriaTests: XCTestCase {
     }
 }
 
-private extension AcceptanceCriteriaTests {
+private extension GreeterTests {
     
     private func makeSUT(
-        date: @escaping Ohce.DateFactory = { Date() }
-    ) -> Ohce {
-        let sut = Ohce(date: date)
+        date: @escaping Greeter.DateFactory = { Date() }
+    ) -> Greeter {
+        let sut = Greeter(date: date)
         return sut
     }
 }
 
-private extension Ohce {
+private extension Greeter {
     
     var log: [String] {
         var array = [String]()

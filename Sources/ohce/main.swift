@@ -7,7 +7,7 @@ let argumentProcessor = ArgumentProcessor()
 argumentProcessor
     .process()
     .run(validArgument: { argument in
-        Ohce()
+        Greeter()
             .run(argument)
             .greet(printer.log)
     })
