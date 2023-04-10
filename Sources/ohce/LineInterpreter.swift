@@ -22,16 +22,13 @@ public final class LineProvider: LineProviding {
 
 public final class LineInterpreter {
     
-    private let lineProvider: LineProviding
     private var nextCapturedLine: String? = .none
     
-    public init(lineProvider: LineProviding) {
-        self.lineProvider = lineProvider
-    }
+    public init() {}
     
     @discardableResult
-    public func processLine() -> Self {
-        nextCapturedLine = lineProvider.readLine()
+    public func processLine(_ line: String) -> Self {
+        nextCapturedLine = line
         return self
     }
     
