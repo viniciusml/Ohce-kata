@@ -25,7 +25,7 @@ final class GreeterTests: XCTestCase {
         XCTAssertEqual(greetCallCount, 0)
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsAfterSix() {
+    func test_runAndGreet_greetsAfterSix() {
         let argument = "Vini"
         let sut = makeSUT { .date(06) }
         
@@ -34,7 +34,7 @@ final class GreeterTests: XCTestCase {
         XCTAssertEqual(sut.log, ["> ¡Buenos días \(argument)!"])
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsBeforeNoon() {
+    func test_runAndGreet_greetsBeforeNoon() {
         let argument = "Vini"
         let sut = makeSUT { .date(11, 59) }
         
@@ -43,7 +43,7 @@ final class GreeterTests: XCTestCase {
         XCTAssertEqual(sut.log, ["> ¡Buenos días \(argument)!"])
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsAfterNoon() {
+    func test_runAndGreet_greetsAfterNoon() {
         let argument = "Vini"
         let sut = makeSUT { .date(12) }
         
@@ -52,7 +52,7 @@ final class GreeterTests: XCTestCase {
         XCTAssertEqual(sut.log, ["> ¡Buenas tardes \(argument)!"])
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsBeforeEight() {
+    func test_runAndGreet_greetsBeforeEight() {
         let argument = "Vini"
         let sut = makeSUT { .date(19, 59) }
         
@@ -61,7 +61,7 @@ final class GreeterTests: XCTestCase {
         XCTAssertEqual(sut.log, ["> ¡Buenas tardes \(argument)!"])
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsAfterEight() {
+    func test_runAndGreet_greetsAfterEight() {
         let argument = "Vini"
         let sut = makeSUT { .date(20, 05) }
         
@@ -70,7 +70,7 @@ final class GreeterTests: XCTestCase {
         XCTAssertEqual(sut.log, ["> ¡Buenas noches \(argument)!"])
     }
     
-    func test_run_withOneArgument_doesNotExitAndGreetsBeforeSix() {
+    func test_runAndGreet_greetsBeforeSix() {
         let argument = "Vini"
         let sut = makeSUT { .date(05, 55) }
         
