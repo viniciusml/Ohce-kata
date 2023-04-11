@@ -63,6 +63,21 @@ final class GreeterTests: XCTestCase {
         
         XCTAssertEqual(sut.log, ["> ¡Buenas noches \(argument)!"])
     }
+    
+    func test_sayGoodbye_withNoArgument() {
+        let sut = makeSUT()
+        let exp = expectation(description: #function)
+        exp.isInverted = true
+        var goodbyeCallCount = 0
+        
+        sut.sayGoodbye { _ in
+            goodbyeCallCount += 1
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 0.1)
+        XCTAssertEqual(goodbyeCallCount, 0)
+    }
 }
 
 private extension GreeterTests {

@@ -18,7 +18,7 @@ public final class Greeter {
     
     private let date: DateFactory
     private var greeting = ""
-    private var argument = ""
+    private var argument: String?
     
     public init(date: @escaping DateFactory = { Date() }) {
         self.date = date
@@ -47,6 +47,7 @@ public final class Greeter {
     
     @discardableResult
     public func sayGoodbye(_ action: (String) -> Void) -> Self {
+        guard let argument else { return self }
         action("> Adios \(argument)")
         return self
     }
@@ -58,6 +59,7 @@ public final class Greeter {
     }
     
     private func greet(_ greetType: Greet) {
+        guard let argument else { return }
         switch greetType {
         case .morning:
             greeting = "> ¡Buenos días \(argument)!"
