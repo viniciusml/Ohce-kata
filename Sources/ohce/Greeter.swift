@@ -70,17 +70,3 @@ public final class Greeter {
         }
     }
 }
-
-private extension Date {
-    
-    func isBetween(_ lhs: Date?, and rhs: Date?) -> Bool {
-        guard let lhs = lhs, let rhs = rhs else {
-            return false
-        }
-        return (min(lhs, rhs)...max(lhs, rhs)).contains(self)
-    }
-    
-    static func h(_ hour: Int, _ minute: Int = 00) -> Self? {
-        Date(hour: hour, minute: minute)
-    }
-}
