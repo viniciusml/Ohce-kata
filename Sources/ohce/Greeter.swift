@@ -7,7 +7,14 @@
 
 import Foundation
 
-public final class Greeter {
+public protocol Greeting {
+    @discardableResult func run(_ argument: String) -> Self
+    @discardableResult func greet(_ action: (String) -> Void) -> Self
+    @discardableResult func and(_ action: () -> Void) -> Self
+    func sayGoodbye(_ action: (String) -> Void)
+}
+
+public final class Greeter: Greeting {
     public typealias DateFactory = () -> Date
     
     enum Greet {
@@ -46,11 +53,9 @@ public final class Greeter {
         return self
     }
     
-    @discardableResult
-    public func sayGoodbye(_ action: (String) -> Void) -> Self {
-        guard let argument else { return self }
+    public func sayGoodbye(_ action: (String) -> Void) {
+        guard let argument else { return }
         action("> Adios \(argument)")
-        return self
     }
     
     @discardableResult

@@ -7,7 +7,14 @@
 
 import Foundation
 
-public final class LineInterpreter {
+public protocol LineInterpreting {
+    @discardableResult func processLine(_ line: String) -> Self
+    @discardableResult func reversed(_ word: (String) -> Void) -> Self
+    @discardableResult func palindrome(_ word: (String) -> Void) -> Self
+    @discardableResult func stop(_ action: () -> Void) -> Self
+}
+
+public final class LineInterpreter: LineInterpreting {
     
     private let stopKeyword = "Stop!"
     private var nextCapturedLine: String? = .none
