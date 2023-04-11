@@ -10,6 +10,21 @@ import XCTest
 
 final class GreeterTests: XCTestCase {
     
+    func test_greet_withoutRunning_doesNotGreet() {
+        let sut = makeSUT()
+        let exp = expectation(description: #function)
+        exp.isInverted = true
+        var greetCallCount = 0
+        
+        sut.greet { _ in
+            greetCallCount += 1
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 0.1)
+        XCTAssertEqual(greetCallCount, 0)
+    }
+    
     func test_run_withOneArgument_doesNotExitAndGreetsAfterSix() {
         let argument = "Vini"
         let sut = makeSUT { .date(06) }
@@ -64,7 +79,7 @@ final class GreeterTests: XCTestCase {
         XCTAssertEqual(sut.log, ["> ¡Buenas noches \(argument)!"])
     }
     
-    func test_sayGoodbye_withNoArgument() {
+    func test_sayGoodbye_withoutRunning_doesNotMessageGoodbye() {
         let sut = makeSUT()
         let exp = expectation(description: #function)
         exp.isInverted = true
@@ -79,7 +94,7 @@ final class GreeterTests: XCTestCase {
         XCTAssertEqual(goodbyeCallCount, 0)
     }
     
-    func test_sayGoodbye_withArgument() {
+    func test_sayGoodbye_afterRunning_messagesGoodbye() {
         let sut = makeSUT()
         let argument = "Vini"
         let exp = expectation(description: #function)
