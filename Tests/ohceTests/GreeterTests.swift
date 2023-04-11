@@ -12,16 +12,17 @@ final class GreeterTests: XCTestCase {
     
     func test_greet_withoutRunning_doesNotGreet() {
         let sut = makeSUT()
-        let exp = expectation(description: #function)
-        exp.isInverted = true
         var greetCallCount = 0
         
-        sut.greet { _ in
-            greetCallCount += 1
-            exp.fulfill()
-        }
+        wait(
+            for: invertedExpectation(description: #function),
+            when: { exp in
+                sut.greet { _ in
+                    greetCallCount += 1
+                    exp.fulfill()
+                }
+            })
         
-        wait(for: [exp], timeout: 0.1)
         XCTAssertEqual(greetCallCount, 0)
     }
     
@@ -81,36 +82,36 @@ final class GreeterTests: XCTestCase {
     
     func test_sayGoodbye_withoutRunning_doesNotMessageGoodbye() {
         let sut = makeSUT()
-        let exp = expectation(description: #function)
-        exp.isInverted = true
         var goodbyeCallCount = 0
         
-        sut.sayGoodbye { _ in
-            goodbyeCallCount += 1
-            exp.fulfill()
-        }
+        wait(
+            for: invertedExpectation(description: #function),
+            when: { exp in
+                sut.sayGoodbye { _ in
+                    goodbyeCallCount += 1
+                    exp.fulfill()
+                }
+            })
         
-        wait(for: [exp], timeout: 0.1)
         XCTAssertEqual(goodbyeCallCount, 0)
     }
     
     func test_sayGoodbye_afterRunning_messagesGoodbye() {
         let sut = makeSUT()
         let argument = "Vini"
-        let exp = expectation(description: #function)
-        var goodbyeCallCount = 0
-        var expectedGoodbye: String?
+        var expectedGoodbye = [String]()
         
-        sut.run(argument)
-            .sayGoodbye { goodbye in
-                goodbyeCallCount += 1
-                expectedGoodbye = goodbye
-                exp.fulfill()
-            }
+        wait(
+            for: expectation(description: #function),
+            when: { exp in
+                sut.run(argument)
+                    .sayGoodbye {
+                        expectedGoodbye.append($0)
+                        exp.fulfill()
+                    }
+            })
         
-        wait(for: [exp], timeout: 0.1)
-        XCTAssertEqual(goodbyeCallCount, 1)
-        XCTAssertEqual(expectedGoodbye, "> Adios \(argument)")
+        XCTAssertEqual(expectedGoodbye, ["> Adios \(argument)"])
     }
 }
 
@@ -121,6 +122,17 @@ private extension GreeterTests {
     ) -> Greeter {
         let sut = Greeter(date: date)
         return sut
+    }
+    
+    func wait(for exp: XCTestExpectation, when action: (XCTestExpectation) -> Void) {
+        action(exp)
+        wait(for: [exp], timeout: 0.1)
+    }
+    
+    func invertedExpectation(description: String) -> XCTestExpectation {
+        let exp = expectation(description: description)
+        exp.isInverted = true
+        return exp
     }
 }
 
